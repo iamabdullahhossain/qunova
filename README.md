@@ -1,7 +1,4 @@
-# Qunova - Contact Management Application
-
-A modern Flutter application for managing contacts with category filtering, search functionality, and real-time notifications. Built with Riverpod state management, Firebase integration, and a clean architecture approach.
-
+# Qunova
 ---
 
 ## 📋 Table of Contents
