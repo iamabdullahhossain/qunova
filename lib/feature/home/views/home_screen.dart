@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:qunova/core/components/custom_container.dart';
 import 'package:qunova/feature/home/controller/home_controller.dart';
+import 'package:qunova/feature/home/models/data_model.dart';
 import 'package:qunova/feature/home/views/sections/category_section.dart';
 import 'package:qunova/feature/home/views/sections/contacts_section.dart';
 import 'package:qunova/feature/home/views/sections/top_bar_section.dart';
@@ -17,6 +20,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   String? selectedRelation;
   String selectedCategoryId = 'all';
+  bool showSearchField = false;
+  String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -216,11 +221,67 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }
 
-    // prepare filtered contacts based on selectedCategoryId
+    Widget _buildEmptyState(BuildContext context) {
+      return Center(
+        child: CustomContainer(
+          context: context,
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 48),
+          boxShadow: [],
+          color: const Color(0xFFEFF5FF),
+          child: Column(
+            mainAxisSize: .min,
+            crossAxisAlignment: .center,
+            mainAxisAlignment: .center,
+            children: [
+              Text(
+                'Ee! No Contacts\nfound.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.blueGrey.shade700,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Gap(10.h),
+              SizedBox(
+                width: 200.w,
+                height: 50.h,
+                child: ElevatedButton(
+                  onPressed: () => _showBottomSheet(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2D7E66),
+                    shape: const StadiumBorder(),
+                  ),
+                  child: Text(
+                    'Add New Contact',
+                    style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // prepare filtered contacts based on selectedCategoryId and searchQuery
     final allContacts = data.asData?.value.data?.contacts ?? [];
-    final filteredContacts = selectedCategoryId == 'all'
+
+    // First filter by category
+    List<Contact> categoryFiltered = selectedCategoryId == 'all'
         ? allContacts
         : allContacts.where((c) => c.categoryId == selectedCategoryId).toList();
+
+    // Then filter by search query
+    List<Contact> filteredContacts = searchQuery.isEmpty
+        ? categoryFiltered
+        : categoryFiltered.where((c) {
+            final nameLower = (c.name ?? '').toLowerCase();
+            final phoneLower = (c.phone ?? '').toLowerCase();
+            final queryLower = searchQuery.toLowerCase();
+            return nameLower.contains(queryLower) ||
+                phoneLower.contains(queryLower);
+          }).toList();
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -239,7 +300,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           data: (data) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TopBarSection(),
+              TopBarSection(
+                showSearchField: showSearchField,
+                searchText: searchQuery,
+                onSearchChanged: (query) {
+                  setState(() {
+                    searchQuery = query;
+                  });
+                },
+                onSearchToggle: () {
+                  setState(() {
+                    showSearchField = !showSearchField;
+                    if (!showSearchField) {
+                      searchQuery = '';
+                    }
+                  });
+                },
+              ),
               CategorySection(
                 category: data.data?.categories ?? [],
                 selectedCategoryId: selectedCategoryId,
@@ -250,7 +327,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 },
               ),
               const SizedBox(height: 10),
-              Expanded(child: ContactsSection(contacts: filteredContacts)),
+              Expanded(
+                child: filteredContacts.isEmpty
+                    ? _buildEmptyState(context)
+                    : ContactsSection(contacts: filteredContacts),
+              ),
             ],
           ),
           error: (error, stackTracer) => Text("Something went wrong"),
