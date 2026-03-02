@@ -16,7 +16,7 @@ class _ContactsSectionState extends State<ContactsSection> {
 
     return ListView.separated(
       itemCount: widget.contacts!.length,
-      separatorBuilder: (_, __) => const Divider(height: 1),
+      separatorBuilder: (_, __) => const Divider(height: 1, indent: 15, endIndent: 15,),
       itemBuilder: (context, index) {
         final contact = widget.contacts?[index];
 

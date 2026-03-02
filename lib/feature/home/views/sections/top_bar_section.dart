@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qunova/gen/assets.gen.dart';
 
 class TopBarSection extends StatefulWidget {
   const TopBarSection({
@@ -64,9 +65,7 @@ class _TopBarSectionState extends State<TopBarSection> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Color(0xFF2E7D67),
-                    ),
+                    borderSide: const BorderSide(color: Color(0xFF2E7D67)),
                   ),
                   suffixIcon: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -110,10 +109,14 @@ class _TopBarSectionState extends State<TopBarSection> {
                   children: [
                     GestureDetector(
                       onTap: widget.onSearchToggle,
-                      child: const Icon(Icons.search, color: Colors.black54),
+                      child: Image.asset(
+                        Assets.png.search.path,
+                        height: 20,
+                        width: 20,
+                      ),
                     ),
                     const SizedBox(width: 15),
-                    const Icon(Icons.menu, color: Colors.black54),
+                    Image.asset(Assets.png.menu.path, height: 20, width: 20),
                   ],
                 ),
               ],

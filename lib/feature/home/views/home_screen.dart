@@ -10,6 +10,8 @@ import 'package:qunova/feature/home/views/sections/contacts_section.dart';
 import 'package:qunova/feature/home/views/sections/top_bar_section.dart';
 import 'package:qunova/gen/assets.gen.dart';
 
+import '../../../core/components/custom_textfield.dart';
+
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -30,27 +32,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final List<String> relations = (data.asData?.value.data?.categories ?? [])
         .map((e) => e.name.toString())
         .toList();
-
-    Widget _buildTextField({required String hint}) {
-      return TextField(
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(color: Colors.blueGrey.shade300),
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 12.w,
-            vertical: 14.h,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.r),
-            borderSide: BorderSide(color: Colors.blue.shade100),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.r),
-            borderSide: const BorderSide(color: Color(0xFF2D7E66)),
-          ),
-        ),
-      );
-    }
 
     void _showBottomSheet(BuildContext context) {
       showModalBottomSheet(
@@ -82,7 +63,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   SizedBox(height: 25.h),
 
-                  _buildTextField(hint: 'Name'),
+                  buildTextField(hint: 'Name'),
                   SizedBox(height: 12.h),
 
                   Container(
@@ -93,10 +74,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     child: Row(
                       children: [
-                        const Text(
-                          '🇺🇸',
-                          style: TextStyle(fontSize: 20),
-                        ),
+                        const Text('🇺🇸', style: TextStyle(fontSize: 20)),
                         Icon(
                           Icons.keyboard_arrow_down,
                           color: Colors.grey.shade600,
@@ -121,10 +99,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   SizedBox(height: 12.h),
 
-                  _buildTextField(hint: 'Designation'),
+                  buildTextField(hint: 'Designation'),
                   SizedBox(height: 12.h),
 
-                  _buildTextField(hint: 'Company'),
+                  buildTextField(hint: 'Company'),
                   SizedBox(height: 12.h),
 
                   DropdownButtonFormField<String>(

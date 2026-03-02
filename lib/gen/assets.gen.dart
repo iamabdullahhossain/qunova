@@ -21,6 +21,12 @@ class $AssetsPngGen {
   /// File path: assets/png/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/png/logo.png');
 
+  /// File path: assets/png/menu.png
+  AssetGenImage get menu => const AssetGenImage('assets/png/menu.png');
+
+  /// File path: assets/png/search.png
+  AssetGenImage get search => const AssetGenImage('assets/png/search.png');
+
   /// File path: assets/png/vector_left.png
   AssetGenImage get vectorLeft =>
       const AssetGenImage('assets/png/vector_left.png');
@@ -33,6 +39,8 @@ class $AssetsPngGen {
   List<AssetGenImage> get values => [
     floatingIcon,
     logo,
+    menu,
+    search,
     vectorLeft,
     vectorRight,
   ];
