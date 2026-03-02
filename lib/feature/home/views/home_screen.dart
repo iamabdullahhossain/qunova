@@ -96,7 +96,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         const Text(
                           '🇺🇸',
                           style: TextStyle(fontSize: 20),
-                        ), // Flag
+                        ),
                         Icon(
                           Icons.keyboard_arrow_down,
                           color: Colors.grey.shade600,
@@ -264,15 +264,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }
 
-    // prepare filtered contacts based on selectedCategoryId and searchQuery
     final allContacts = data.asData?.value.data?.contacts ?? [];
 
-    // First filter by category
     List<Contact> categoryFiltered = selectedCategoryId == 'all'
         ? allContacts
         : allContacts.where((c) => c.categoryId == selectedCategoryId).toList();
 
-    // Then filter by search query
     List<Contact> filteredContacts = searchQuery.isEmpty
         ? categoryFiltered
         : categoryFiltered.where((c) {
