@@ -15,19 +15,17 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  // Selected relation must be stored on the State so the bottom sheet's StatefulBuilder
-  // can update the selection and rebuild correctly.
   String? selectedRelation;
+  String selectedCategoryId = 'all';
 
   @override
   Widget build(BuildContext context) {
     final data = ref.watch(homeControllerProvider);
-    // Safely extract category names from the async provider value.
+
     final List<String> relations = (data.asData?.value.data?.categories ?? [])
         .map((e) => e.name.toString())
         .toList();
 
-    // Reusable TextField Border Style to match image
     Widget _buildTextField({required String hint}) {
       return TextField(
         decoration: InputDecoration(
@@ -69,7 +67,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Top Grey Handle/Bar
                   Container(
                     width: 60.w,
                     height: 4.h,
@@ -80,11 +77,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   SizedBox(height: 25.h),
 
-                  // Name Field
                   _buildTextField(hint: 'Name'),
                   SizedBox(height: 12.h),
 
-                  // Phone Number Field with Flag
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                     decoration: BoxDecoration(
@@ -121,15 +116,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   SizedBox(height: 12.h),
 
-                  // Designation Field
                   _buildTextField(hint: 'Designation'),
                   SizedBox(height: 12.h),
 
-                  // Company Field
                   _buildTextField(hint: 'Company'),
                   SizedBox(height: 12.h),
 
-                  // Relation Dropdown
                   DropdownButtonFormField<String>(
                     initialValue: selectedRelation,
                     hint: Text(
@@ -174,7 +166,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                   SizedBox(height: 30.h),
 
-                  // Save Contact Button (Rounded/Stadium shape)
                   SizedBox(
                     width: double.infinity,
                     height: 55.h,
@@ -182,7 +173,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2D7E66),
-                        // Image green color
+
                         shape: const StadiumBorder(),
                         elevation: 0,
                       ),
@@ -198,7 +189,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   SizedBox(height: 12.h),
 
-                  // Cancel Button (Outlined Stadium shape)
                   SizedBox(
                     width: double.infinity,
                     height: 55.h,
@@ -226,6 +216,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }
 
+    // prepare filtered contacts based on selectedCategoryId
+    final allContacts = data.asData?.value.data?.contacts ?? [];
+    final filteredContacts = selectedCategoryId == 'all'
+        ? allContacts
+        : allContacts.where((c) => c.categoryId == selectedCategoryId).toList();
+
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       floatingActionButton: InkWell(
@@ -244,9 +240,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TopBarSection(),
-              CategorySection(category: data.data?.categories),
+              CategorySection(
+                category: data.data?.categories ?? [],
+                selectedCategoryId: selectedCategoryId,
+                onCategorySelected: (id) {
+                  setState(() {
+                    selectedCategoryId = id ?? 'all';
+                  });
+                },
+              ),
               const SizedBox(height: 10),
-              Expanded(child: ContactsSection(contacts: data.data?.contacts)),
+              Expanded(child: ContactsSection(contacts: filteredContacts)),
             ],
           ),
           error: (error, stackTracer) => Text("Something went wrong"),
