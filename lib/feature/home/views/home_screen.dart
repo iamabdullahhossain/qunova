@@ -31,6 +31,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final List<String> relations = (data.asData?.value.data?.categories ?? [])
         .map((e) => e.name.toString())
+        .where((name) => name.toLowerCase() != 'all' && name.toLowerCase() != 'blocked')
         .toList();
 
     void _showBottomSheet(BuildContext context) {
@@ -107,6 +108,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                   DropdownButtonFormField<String>(
                     initialValue: selectedRelation,
+                    dropdownColor: Colors.white,
                     hint: Text(
                       'Relation',
                       style: TextStyle(
@@ -136,6 +138,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     items: relations.map((String value) {
                       return DropdownMenuItem<String>(
+
                         value: value,
                         child: Text(value, style: TextStyle(fontSize: 14.sp)),
                       );

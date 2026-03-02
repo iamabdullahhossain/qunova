@@ -133,22 +133,27 @@ flutter build ios --release
 - **Solution**: The first character of each category name is used as a visual identifier/avatar
 - **Implementation**: When displaying categories, we extract the first character and use it in a circular avatar widget
 
-### 2. **Contact Filtering Logic**
+### 2. **Categories as Relations**
+- **Approach**: API categories are used as "Relations" in the contact form
+- **Filtering**: The "All" and "Blocked" categories are excluded from the relations dropdown
+- **Reason**: These are system categories for filtering contacts, not applicable as relationship types when adding new contacts
+
+### 3. **Contact Filtering Logic**
 - When category "All" is selected → Display all contacts across all categories
 - When a specific category is selected → Filter and display only contacts belonging to that category
 - Filtering is performed using `categoryId` parameter in API requests
 
-### 3. **Search Functionality**
+### 4. **Search Functionality**
 - Search works in conjunction with category filtering
 - Users can search by contact **name** or **phone number**
 - When both category filter and search text are active, results match **both** criteria
 - The search bar appears inline with a close/clear button for easy reset
 
-### 4. **No Results Handling**
+### 5. **No Results Handling**
 - When a search query returns no results, display "No contacts found" message
 - This applies whether filtering by category or searching
 
-### 5. **Data Persistence**
+### 6. **Data Persistence**
 - Hive is used for local caching of contacts and categories
 
 ---
